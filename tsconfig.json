@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "node",
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "dist"
-  },
+    "outDir": "dist",
+    "strictNullChecks": true
+    },
   "include": [
     "src/**/*.ts",
     "tests/**/*.ts"

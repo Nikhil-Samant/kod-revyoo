@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Simplify code review with AI",
   "main": "src/app.ts",
+  "type": "module",
   "scripts": {
-    "start": "nodemon src/app.ts",
+    "start": "nodemon --exec node --no-warnings=ExperimentalWarning --loader ts-node/esm src/app.ts",
     "test": "jest",
     "lint": "eslint 'src/**/*.{ts,tsx}'"
   },
