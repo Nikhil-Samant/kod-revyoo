@@ -1,0 +1,6 @@
+threshold: medium
+allowed_patterns:
+- \s*Key\s*
+- \s*key\s*
+- \s*Secret\s*
+- \s*secret\s*

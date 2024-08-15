@@ -1,13 +1,22 @@
-// This file exports the necessary types and interfaces used in the project
+import { Octokit } from 'octokit';
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
+export interface AppOptions {
+  appId: number;
+  privateKey: string;
+  webhooks: {
+    secret: string;
+  };
+  Octokit?: typeof Octokit;
 }
 
-export interface Product {
-  id: number;
-  name: string;
-  price: number;
+export interface Payload {
+  repository: {
+    owner: {
+      login: string;
+    };
+    name: string;
+  };
+  pull_request: {
+    number: number;
+  };
 }

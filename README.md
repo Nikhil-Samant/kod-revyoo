@@ -44,6 +44,8 @@ To set up and use this TypeScript project, follow these steps:
 Feel free to modify and extend the project according to your needs.
 
 Happy coding!
+
 ```
 
 Please let me know if you need help with anything else.
+```

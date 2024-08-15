@@ -7,9 +7,6 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "strictNullChecks": true
-    },
-  "include": [
-    "src/**/*.ts",
-    "tests/**/*.ts"
-  ]
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"]
 }
