@@ -2,6 +2,10 @@ import { createApp, readPrivateKey } from '../src/app';
 import { jest } from '@jest/globals';
 import fs from 'fs';
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 describe('App', () => {
   it('should create an instance of App', () => {
     const appId = 123;
@@ -24,7 +28,7 @@ describe('App', () => {
   });
 });
 
-describe('Read Private Key', () => {
+describe('readPrivateKey', () => {
   it('should read the private key from a file if file path', () => {
     const privateKey = 'private-key';
     jest.spyOn(fs, 'existsSync').mockImplementation(() => true);
@@ -38,6 +42,6 @@ describe('Read Private Key', () => {
   it('should throw exception when file path not exists', () => {
     jest.spyOn(fs, 'existsSync').mockImplementation(() => false);
 
-    expect(() => readPrivateKey('path/to/private-key')).toThrowError();
+    expect(() => readPrivateKey('path/to/private-key')).toThrow();
   });
 });

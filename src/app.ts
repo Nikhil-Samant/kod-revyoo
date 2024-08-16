@@ -4,7 +4,7 @@ import { Octokit, App } from 'octokit';
 import { createNodeMiddleware } from '@octokit/webhooks';
 import { createServer } from 'node:http';
 import { AppOptions } from './types';
-import { handlePullRequestEvent } from './handlePullRequestEvent.ts';
+import { handleWebhookEvent } from './handleWebhookEvent.ts';
 
 dotenv.config();
 
@@ -67,7 +67,7 @@ export function main(): void {
   //     app.octokit.log.debug(`Authenticated as '${data.name}'`);
   //   });
 
-  handlePullRequestEvent(app);
+  handleWebhookEvent(app);
 
   startWebhooksServer(app, port, path);
 }
