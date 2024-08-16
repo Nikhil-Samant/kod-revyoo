@@ -3,8 +3,8 @@ import * as fs from 'fs';
 import { Octokit, App } from 'octokit';
 import { createNodeMiddleware } from '@octokit/webhooks';
 import { createServer } from 'node:http';
-import { handlePullRequestEvent } from './handlePullRequestEvent';
 import { AppOptions } from './types';
+import { handlePullRequestEvent } from './handlePullRequestEvent.ts';
 
 dotenv.config();
 
@@ -67,11 +67,7 @@ function main(): void {
   //     app.octokit.log.debug(`Authenticated as '${data.name}'`);
   //   });
 
-  app.webhooks.on('pull_request.opened', handlePullRequestEvent);
-
-  app.webhooks.onError((error: Error) => {
-    app.octokit.log.error(`Error processing request: ${error.message}`, error);
-  });
+  handlePullRequestEvent(app);
 
   startWebhooksServer(app, port, path);
 }

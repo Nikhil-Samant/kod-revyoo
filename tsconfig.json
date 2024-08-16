@@ -6,7 +6,9 @@
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src/**/*.ts", "tests/**/*.ts"]
 }

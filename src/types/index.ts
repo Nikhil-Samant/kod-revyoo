@@ -8,15 +8,3 @@ export interface AppOptions {
   };
   Octokit?: typeof Octokit;
 }
-
-export interface Payload {
-  repository: {
-    owner: {
-      login: string;
-    };
-    name: string;
-  };
-  pull_request: {
-    number: number;
-  };
-}
