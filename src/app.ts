@@ -1,5 +1,5 @@
-import * as dotenv from 'dotenv';
-import * as fs from 'fs';
+import dotenv from 'dotenv';
+import fs from 'fs';
 import { Octokit, App } from 'octokit';
 import { createNodeMiddleware } from '@octokit/webhooks';
 import { createServer } from 'node:http';
@@ -8,14 +8,14 @@ import { handlePullRequestEvent } from './handlePullRequestEvent.ts';
 
 dotenv.config();
 
-function readPrivateKey(privateKeyPath: string): string {
+export function readPrivateKey(privateKeyPath: string): string {
   if (!fs.existsSync(privateKeyPath)) {
     throw new Error(`Private key file not found: ${privateKeyPath}`);
   }
   return fs.readFileSync(privateKeyPath, 'utf8');
 }
 
-function createApp(
+export function createApp(
   appId: number,
   privateKey: string,
   webhookSecret: string,
@@ -48,7 +48,7 @@ function startWebhooksServer(app: App, port: number, path: string): void {
   });
 }
 
-function main(): void {
+export function main(): void {
   const appId = process.env.APP_ID;
   const webhookSecret = process.env.WEBHOOK_SECRET;
   const privateKeyPath = process.env.PRIVATE_KEY_PATH;
@@ -71,5 +71,3 @@ function main(): void {
 
   startWebhooksServer(app, port, path);
 }
-
-main();

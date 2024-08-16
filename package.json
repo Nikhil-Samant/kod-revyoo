@@ -5,8 +5,8 @@
   "main": "src/app.ts",
   "type": "module",
   "scripts": {
-    "start": "nodemon --exec node --no-warnings=ExperimentalWarning --loader ts-node/esm src/app.ts",
-    "test": "jest",
+    "start": "nodemon --exec node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts",
+    "tests": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --coverage",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "prepare": "husky install"
   },
