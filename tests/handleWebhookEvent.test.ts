@@ -1,6 +1,7 @@
 import { App, Octokit } from 'octokit';
 import { jest } from '@jest/globals';
 import { handleWebhookEvent, handlePrEvent } from '../src/handleWebhookEvent.ts';
+import { CommentPayload } from '../src/types/index.ts';
 
 let app: App;
 let octokit: Octokit;
@@ -47,21 +48,35 @@ describe('handleWebhookEvent', () => {
 });
 
 describe('handlePrEvent', () => {
-  it('should create a comment on pull request', async () => {
-    const createComment = jest.spyOn(octokit.rest.issues, 'createComment').mockImplementation();
+  it('should get list of files from pull request', async () => {
+    const files = jest.spyOn(octokit.rest.pulls, 'listFiles').mockImplementation();
     await handlePrEvent(octokit, payload);
 
-    expect(createComment).toHaveBeenCalledWith({
+    expect(files).toHaveBeenCalledWith({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      pull_number: payload.pull_request.number
+    });
+  });
+
+  it('should create a comment on pull request', async () => {
+    jest.spyOn(octokit.rest.pulls, 'listFiles').mockImplementation();
+    const createComment = jest.spyOn(octokit.rest.issues, 'createComment').mockImplementation();
+    const comment: CommentPayload = {
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
       issue_number: payload.pull_request.number,
       body: 'Hello from my app. Things have changed'
-    });
+    };
+    await handlePrEvent(octokit, payload);
+
+    expect(createComment).toHaveBeenCalledWith(comment);
   });
 
   it('should log error if creating comment fails', async () => {
     const error = new Error('Test error');
     const consoleError = jest.spyOn(console, 'error').mockReturnValueOnce();
+    jest.spyOn(octokit.rest.pulls, 'listFiles').mockImplementation();
     jest
       .spyOn(octokit.rest.issues, 'createComment')
       .mockImplementation(() => Promise.reject(error));
