@@ -1,5 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { App } from 'octokit';
-import { CommentPayload, PullRequestFilesPayload } from './types';
+import {
+  GeneralCommentPayload,
+  PullRequestFile,
+  PullRequestFilesResponsePayload,
+  PullRequestFilesRequestPayload,
+  PullRequestReviewPayload
+} from './types/index.ts';
 
 export function handleWebhookEvent(app: App): void {
   app.webhooks.on(
@@ -11,21 +18,21 @@ export function handleWebhookEvent(app: App): void {
     app.octokit.log.error(`Error processing request: ${error.message}`, error);
   });
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export async function handlePrEvent(octokit: any, payload: any): Promise<void> {
   try {
     console.log(`Received a pull request event for #${payload.pull_request.number}`);
-    await getPullRequestFiles(payload, octokit);
-    await postComment(payload, octokit);
+    const response = await getPullRequestFiles(octokit, payload);
+    await createReviewOnPr(octokit, payload, response.data);
+    await postComment(octokit, payload);
     console.log('Comment created successfully');
   } catch (error) {
     console.error(`Error! Message: ${error}`);
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function postComment(payload: any, octokit: any) {
-  const commentPayload: CommentPayload = {
+export async function postComment(octokit: any, payload: any): Promise<void> {
+  const commentPayload: GeneralCommentPayload = {
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     issue_number: payload.pull_request.number,
@@ -35,14 +42,41 @@ async function postComment(payload: any, octokit: any) {
   await octokit.rest.issues.createComment(commentPayload);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function getPullRequestFiles(payload: any, octokit: any) {
-  const listPrFilesPayload: PullRequestFilesPayload = {
+export async function getPullRequestFiles(
+  octokit: any,
+  payload: any
+): Promise<PullRequestFilesResponsePayload> {
+  const listPrFilesPayload: PullRequestFilesRequestPayload = {
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     pull_number: payload.pull_request.number
   };
 
   const files = await octokit.rest.pulls.listFiles(listPrFilesPayload);
-  console.log('Files in the pull request:', files);
+  return files;
+}
+
+export async function createReviewOnPr(
+  octokit: any,
+  payload: any,
+  files: PullRequestFile[]
+): Promise<void> {
+  console.log('Creating a review on the pull request');
+  const reviewCommentPayload: PullRequestReviewPayload = {
+    owner: payload.repository.owner.login,
+    repo: payload.repository.name,
+    pull_number: payload.pull_request.number,
+    body: 'This is a review comment',
+    comments: [
+      {
+        path: files[0].filename,
+        body: 'commenting on the first file',
+        position: 1
+      }
+    ],
+    event: 'COMMENT'
+  };
+
+  await octokit.rest.pulls.createReview(reviewCommentPayload);
+  console.log('Review created successfully');
 }
