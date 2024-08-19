@@ -6,12 +6,12 @@ import {
   getPullRequestFiles,
   postComment,
   createReviewOnPr
-} from '../src/handleWebhookEvent.ts';
+} from '../src/githubService.ts';
 import {
   GeneralCommentPayload,
   PullRequestFile,
   PullRequestReviewPayload,
-  PullReuqestFileStatus
+  PullRequestFileStatus
 } from '../src/types/index.ts';
 
 let app: App;
@@ -41,7 +41,6 @@ beforeEach(() => {
       number: 123
     }
   };
-  jest.spyOn(console, 'error').mockReturnValueOnce();
 });
 
 afterEach(() => {
@@ -176,7 +175,7 @@ describe('createReviewOnPr', () => {
       {
         sha: 'sha',
         filename: 'filename',
-        status: PullReuqestFileStatus.added,
+        status: PullRequestFileStatus.added,
         additions: 1,
         deletions: 1,
         changes: 1,
@@ -195,7 +194,8 @@ describe('createReviewOnPr', () => {
       comments: [
         {
           path: files[0].filename,
-          body: 'commenting on the first file'
+          body: 'commenting on the first file',
+          position: 1
         }
       ],
       event: 'COMMENT'

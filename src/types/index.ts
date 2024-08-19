@@ -48,7 +48,7 @@ export interface PullRequestFilesResponsePayload {
 export interface PullRequestFile {
   sha: string;
   filename: string;
-  status: PullReuqestFileStatus;
+  status: PullRequestFileStatus;
   additions: number;
   deletions: number;
   changes: number;
@@ -58,7 +58,7 @@ export interface PullRequestFile {
   patch: string;
 }
 
-export enum PullReuqestFileStatus {
+export enum PullRequestFileStatus {
   added = 'added',
   modified = 'modified',
   removed = 'removed',
