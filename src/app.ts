@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Octokit, App } from 'octokit';
 import { createNodeMiddleware } from '@octokit/webhooks';
 import { createServer } from 'node:http';
-import { AppOptions } from './types';
+import { AppOptions } from './types/options.ts';
 import { handleWebhookEvent } from './githubService.ts';
 
 dotenv.config();
