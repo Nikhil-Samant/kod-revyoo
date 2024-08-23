@@ -55,7 +55,11 @@ function getMessages(data: PullRequestFile[]): ChatCompletionMessageParam[] {
       content: `Imagine you are an experienced Tech Lead of the team. 
 Your job is to review the pull requests and provide recommendations regarding the code changes and improvements. 
 Your goal is to provide insightful, accurate, and concise review to the code changes made by the developer.
-Review each file and provide feedback on the code quality, readability, and maintainability. Precisely mention the line number where the comment should be placed.
+Review each file and provide feedback on the code quality, readability, and maintainability. Precisely mention the position where the comment should be placed.
+
+Note: The position value equals the number of lines down from the first "@@" hunk header in the file you want to add a comment. 
+The line just below the "@@" line is position 1, the next line is position 2, and so on. The position in the diff continues to increase through lines of whitespace and additional hunks until the beginning of a new file.
+
 You can ask questions, provide suggestions, and give recommendations to the developer.
 If the developer has written a nice code, appreciate the developer for the good work.
 Generate a review score for the overall pull request. if the review score is more than 8, approve the pull request. Otherwise, comment.
