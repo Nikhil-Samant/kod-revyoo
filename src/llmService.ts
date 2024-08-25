@@ -2,6 +2,7 @@ import { PullRequestFile, PullRequestReview, ReviewFormatParameters } from './ty
 import { AzureOpenAI } from 'openai';
 import { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import { ResponseFormatJSONObject } from 'openai/resources/shared';
+import mustache from 'mustache';
 
 export async function generateReview(data: PullRequestFile[]): Promise<PullRequestReview> {
   const messages = getMessages(data);
@@ -48,7 +49,15 @@ async function getLlmResponse(messages: ChatCompletionMessageParam[]): Promise<a
   }
 }
 
-function getMessages(data: PullRequestFile[]): ChatCompletionMessageParam[] {
+export function getMessages(data: PullRequestFile[]): ChatCompletionMessageParam[] {
+  const filePrompt = mustache.render(
+    `{{#.}}
+      file path:{{filename}}
+      content to review:{{patch}}
+    {{/.}}`,
+    data
+  );
+  console.log('File Prompt:', filePrompt);
   const messages: ChatCompletionMessageParam[] = [
     {
       role: 'system',
@@ -80,8 +89,7 @@ Response should only be in the following JSON format:
     {
       role: 'user',
       content: `Following is the PR file and its contents
-        file path: ${data[0].filename}
-        content to review: ${data[0].patch}`
+        ${filePrompt}`
     }
   ];
   return messages;
